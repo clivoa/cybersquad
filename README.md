@@ -117,7 +117,8 @@ my-cybersquad/
 1. Open `prompts/master-prompt.md`
 2. Pick role usage from `prompts/persona-prompts.generated.md` (or use curated `persona-prompts.md`)
 3. Run a scenario template (`triage`, `incident`, `vuln-prioritization`, etc.)
-4. Run weekly optimization using `prompts/persona-skill-upgrades.md`
+4. For OpenCTI-driven workflows, use templates such as `prompts/opencti-daily-brief.md`, `prompts/opencti-kev-prioritization.md`, or `prompts/opencti-financial-hunting-review.md`
+5. Run weekly optimization using `prompts/persona-skill-upgrades.md`
 
 Note: `persona-prompts.generated.md` and `prompts/personas/*.md` are generated during `cybersquad init` (and by `cybersquad generate prompts`). They are not packaged as static template files.
 
