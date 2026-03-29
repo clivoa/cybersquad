@@ -1,0 +1,19 @@
+# CyberSquad default configuration
+# Keep it simple and filesystem-based.
+
+language: en-US
+
+defaults:
+  collaboration_mode: dual-role
+  output_style: actionable
+  confidence_required: true
+
+models:
+  orchestrator: powerful
+  analyst: fast
+  specialist: powerful
+
+guardrails:
+  include_assumptions: true
+  include_risks: true
+  include_decision_needed: true
