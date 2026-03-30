@@ -1,67 +1,194 @@
 {
   "version": 1,
-  "project": "CyberSquad OpenCTI Operations Loop",
-  "overview": "Iterative loop for CTI ingestion, prioritization, and operational handoff using CyberSquad personas.",
+  "project": "CyberSquad OpenCTI Homelab Operations Loop",
+  "overview": "Iterative OpenCTI operations backlog that combines persona ownership, recurring intelligence routines, and Ralph Loop execution discipline.",
   "goals": [
-    "Convert daily OpenCTI intake into actionable decisions",
-    "Preserve structured memory across loop iterations",
-    "Support repeatable persona collaboration with auditable outputs"
+    "Convert OpenCTI intake into actionable daily outputs",
+    "Track persona-owned stories with clear status and audit trail",
+    "Improve the lab process over time without storing secrets in repo files"
   ],
   "nonGoals": [
-    "No direct destructive write operations in OpenCTI",
-    "No secret storage in repository files"
+    "No plaintext secret storage in PRD, logs, or generated artifacts",
+    "No destructive OpenCTI modifications by default"
   ],
+  "operatingModel": {
+    "opencti": "System of record for CTI objects, relationships, and connector intake",
+    "personas": "Analytical owners of each story and output",
+    "ralphLoop": "One-story-per-iteration executor with progress, activity, and guardrails",
+    "openclaw": "Scheduler/orchestrator for recurring runs"
+  },
+  "authModel": {
+    "recommended": "Use one technical OpenCTI account and one API token at homelab stage",
+    "why": [
+      "Lower credential sprawl",
+      "Simpler maintenance",
+      "Persona ownership is tracked in backlog and report metadata"
+    ],
+    "upgradeWhen": [
+      "Need strict per-workflow audit attribution",
+      "Need role-separated permissions",
+      "Moving to production-like governance"
+    ]
+  },
   "successMetrics": [
-    "Daily brief produced with evidence, assumptions, and confidence",
-    "Action plan includes owner and SLA for each priority item"
+    "Daily outputs include confidence, caveats, and owner persona",
+    "Actionable hypotheses and prioritization notes are produced with clear relevance rationale",
+    "Backlog stories move through open/in_progress/done with evidence artifacts"
   ],
   "openQuestions": [
-    "Which OpenCTI entities should be auto-tagged vs manually reviewed?"
+    "Which OpenCTI objects should be auto-labeled vs manually curated?",
+    "What minimum signal threshold should trigger escalation for financial-sector workflows?"
   ],
   "qualityGates": [
     "python3 -m json.tool .agents/tasks/prd.json > /dev/null"
   ],
   "stories": [
     {
-      "id": "US-001",
-      "title": "Create OpenCTI operating context for personas",
+      "id": "DF-001",
+      "title": "Generate Daily Financial CTI Brief",
+      "track": "recurring_operations",
+      "owner": "Orion (CTI)",
+      "supportingLenses": [
+        "Raven (Hunter)",
+        "Patch (VulnOps)",
+        "Pulse (Fraud)"
+      ],
       "status": "open",
       "dependsOn": [],
-      "description": "As Orion (CTI), I want a consistent operating context so future iterations can prioritize intel with less ambiguity.",
+      "description": "As Orion, I want a concise daily OpenCTI brief so financial-sector defenders can focus on high-value threats and avoid intake noise.",
       "acceptanceCriteria": [
-        "Create `_cybersquad/_memory/opencti-context.md` with: data sources, sector focus, severity rubric, confidence rubric",
-        "Example: include one scored item showing severity + confidence",
-        "Negative case: missing confidence rubric should fail validation"
+        "Create `outputs/opencti/daily-brief-YYYY-MM-DD.md` using `prompts/opencti-daily-brief.md`",
+        "Include 3-5 key points max, confidence statements, and caveats",
+        "Include a short watchlist for follow-up",
+        "Negative case: if useful signal is low, state this clearly instead of padding output"
       ]
     },
     {
-      "id": "US-002",
-      "title": "Generate daily OpenCTI intelligence brief",
-      "status": "open",
-      "dependsOn": [
-        "US-001"
+      "id": "DF-002",
+      "title": "Review KEV Priorities for Financial Context",
+      "track": "recurring_operations",
+      "owner": "Patch (VulnOps)",
+      "supportingLenses": [
+        "Orion (CTI)",
+        "Forge (Detection)"
       ],
-      "description": "As Orion (CTI) with Raven (Hunter), I want a concise daily brief so SOC and detection teams can focus on high-value threats.",
+      "status": "open",
+      "dependsOn": [],
+      "description": "As Patch, I want to prioritize newly visible KEV/vulnerability content so remediation and monitoring teams can act quickly.",
       "acceptanceCriteria": [
-        "Create `outputs/opencti/daily-brief.md` using the structure from `prompts/opencti-daily-brief.md`",
-        "Include at least 3 prioritized items with rationale and ATT&CK mapping where available",
-        "Example: one item maps to concrete hunt hypothesis",
-        "Negative case: item without relevance rationale should fail validation"
+        "Create `outputs/opencti/kev-prioritization-YYYY-MM-DD.md` from `prompts/opencti-kev-prioritization.md`",
+        "Each prioritized item includes relevance rationale and confidence",
+        "Include at least one monitoring or detection implication",
+        "Negative case: do not force high priority when context is weak"
       ]
     },
     {
-      "id": "US-003",
-      "title": "Create actionable handoff plan",
+      "id": "DF-003",
+      "title": "Translate Intake into Financial Hunting Hypotheses",
+      "track": "recurring_operations",
+      "owner": "Raven (Hunter)",
+      "supportingLenses": [
+        "Orion (CTI)",
+        "Pulse (Fraud)",
+        "Forge (Detection)"
+      ],
       "status": "open",
       "dependsOn": [
-        "US-002"
+        "DF-001"
       ],
-      "description": "As Atlas (SOC) + Forge (Detection) + Patch (VulnOps), I want an action plan so operations can execute quickly.",
+      "description": "As Raven, I want to transform recent OpenCTI content into practical hunt hypotheses for financial organizations.",
       "acceptanceCriteria": [
-        "Create `outputs/opencti/action-plan.md` with sections: Now (<=24h), Next (<=72h), Later (<=30d)",
-        "Each action includes owner persona, expected outcome, and confidence score",
-        "Example: at least one detection tuning action and one vulnerability prioritization action",
-        "Negative case: action without owner or timeline should fail validation"
+        "Create `outputs/opencti/financial-hunting-review-YYYY-MM-DD.md` using `prompts/opencti-financial-hunting-review.md`",
+        "Include 1-3 actionable hypotheses with suggested telemetry",
+        "Include detection opportunities and confidence/caveats",
+        "Negative case: reject generic commentary with no hunting action"
+      ]
+    },
+    {
+      "id": "DF-004",
+      "title": "Assess Fraud-Relevant Phishing and Session Abuse Themes",
+      "track": "recurring_operations",
+      "owner": "Pulse (Fraud)",
+      "supportingLenses": [
+        "Orion (CTI)",
+        "Raven (Hunter)"
+      ],
+      "status": "open",
+      "dependsOn": [
+        "DF-001"
+      ],
+      "description": "As Pulse, I want a fraud lens review of OpenCTI intake so ATO and phishing abuse patterns are tracked early.",
+      "acceptanceCriteria": [
+        "Create `outputs/opencti/fraud-lens-review-YYYY-MM-DD.md`",
+        "Include top themes for phishing, AiTM, session hijacking, and ATO where present",
+        "Map each highlighted theme to business relevance",
+        "Negative case: avoid broad fraud claims without observable support"
+      ]
+    },
+    {
+      "id": "DF-005",
+      "title": "Refine Daily Brief Presentation Template",
+      "track": "improvement",
+      "owner": "Orion (CTI)",
+      "supportingLenses": [
+        "Forge (Detection)",
+        "Atlas (SOC)"
+      ],
+      "status": "open",
+      "dependsOn": [
+        "DF-001"
+      ],
+      "description": "As Orion, I want a cleaner reusable daily brief layout so outputs are easier to consume and publish.",
+      "acceptanceCriteria": [
+        "Create or update `outputs/opencti/templates/daily-brief-layout.md`",
+        "Define mandatory sections, optional sections, and formatting rules",
+        "Add one filled sample section from a prior brief",
+        "Negative case: no layout that hides confidence/caveat fields"
+      ]
+    },
+    {
+      "id": "DF-006",
+      "title": "Curate Source-Family Label Candidates",
+      "track": "improvement",
+      "owner": "Orion (CTI)",
+      "supportingLenses": [
+        "Patch (VulnOps)",
+        "Raven (Hunter)"
+      ],
+      "status": "open",
+      "dependsOn": [
+        "DF-001"
+      ],
+      "description": "As Orion, I want candidate source-family labels from recent intake so OpenCTI curation quality improves over time.",
+      "acceptanceCriteria": [
+        "Create `outputs/opencti/source-family-label-candidates-YYYY-MM-DD.md`",
+        "For each candidate label, include reason and expected operational value",
+        "Identify labels that should remain manual-review only",
+        "Negative case: avoid label proposals without evidence"
+      ]
+    },
+    {
+      "id": "DF-007",
+      "title": "Assess Feed Signal Quality",
+      "track": "improvement",
+      "owner": "Orion (CTI)",
+      "supportingLenses": [
+        "Patch (VulnOps)",
+        "Raven (Hunter)",
+        "Pulse (Fraud)"
+      ],
+      "status": "open",
+      "dependsOn": [
+        "DF-001",
+        "DF-002",
+        "DF-003"
+      ],
+      "description": "As Orion, I want to score the current feed quality so we can tune connector usefulness and reduce low-value noise.",
+      "acceptanceCriteria": [
+        "Create `outputs/opencti/feed-signal-quality-YYYY-MM-DD.md`",
+        "Assess at least OTX, URLhaus, KEV, and MITRE signal usefulness for financial-sector workflows",
+        "Include recommendations: keep, tune, or de-prioritize each source",
+        "Negative case: avoid scoring without clear criteria"
       ]
     }
   ]

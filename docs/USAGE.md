@@ -98,3 +98,22 @@ Notes:
 - Use one story per iteration (`open` -> `in_progress` -> `done`).
 - Loop memory is file-based in `.ralph/` (`progress.md`, `guardrails.md`, `errors.log`, `activity.log`).
 - CyberSquad template defaults to `NO_COMMIT=true` for safer operational use.
+
+## OpenCTI + Persona Ownership
+
+When using OpenCTI workflows, treat personas as story owners:
+
+- Orion: daily CTI brief and source relevance
+- Patch: KEV prioritization
+- Raven: hunt hypotheses
+- Pulse: fraud and ATO lens
+- Forge: detection implications
+
+For homelab operation, prefer one technical OpenCTI account/API key and keep persona ownership in output metadata and PRD stories.
+
+See:
+
+- `prompts/opencti-daily-brief.md`
+- `prompts/opencti-kev-prioritization.md`
+- `prompts/opencti-financial-hunting-review.md`
+- `docs/OPENCTI-OPENCLAW-RALPH.md`

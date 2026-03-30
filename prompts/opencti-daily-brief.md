@@ -19,17 +19,43 @@ Objective:
 Inputs:
 - Recent OpenCTI content from connectors such as OTX, CISA KEV, URLhaus, MITRE ATT&CK, and curated reports
 Constraints:
-- Keep the output concise
-- Focus on signal over noise
+- Focus on signal over noise; do not list everything that arrived
+- Keep the output concise and professional
+- Do not invent facts or overstate weak content
 - Use English for the final analytical output
-Output format:
-- 1) Relevant intake
-- 2) What deserves attention
-- 3) Relevance to the financial sector
-- 4) Hunting ideas
-- 5) Notes
-Decision needed:
-- [No immediate decision / Review / Prioritize follow-up]
+Mandatory response structure:
+Daily Financial CTI Brief
+Date: [today's date]
+Scope: Financial-sector threat hunting relevance
+Sources reviewed: OpenCTI (OTX, CISA KEV, URLhaus, MITRE ATT&CK, curated content)
+Lead analyst: Orion (CTI)
+Supporting lenses: Raven (Hunter), Patch (VulnOps), Pulse (Fraud)
+
+Executive Summary
+- one short paragraph
+
+Key Points
+- 3 to 5 bullets maximum
+
+Threat Highlights
+For each highlighted theme, use:
+- Theme:
+- What was observed:
+- Why it matters:
+- Confidence:
+- Source family:
+
+Relevance to Financial Organizations
+- short focused section
+
+Hunting Opportunities
+- 1 to 3 short, actionable hypotheses
+
+Priority Watchlist
+- short list of themes, campaigns, vulnerabilities, or activity to keep under watch
+
+Notes and Caveats
+- ingestion gaps, low-signal periods, and confidence limitations
 ```
 
 ## Expected collaboration pattern

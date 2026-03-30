@@ -1,0 +1,189 @@
+services:
+  redis:
+    image: redis:7.2
+    restart: unless-stopped
+    volumes:
+      - ./data/redis:/data
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    volumes:
+      - ./data/rabbitmq:/var/lib/rabbitmq
+    ports:
+      - "15672:15672"
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+
+  minio:
+    image: minio/minio:RELEASE.2025-02-28T09-55-16Z
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - ./data/minio:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms4g -Xmx4g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./data/elasticsearch:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+
+  opencti:
+    image: opencti/platform:6.5.8
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - rabbitmq
+      - postgres
+      - minio
+      - elasticsearch
+    environment:
+      NODE_OPTIONS: --max-old-space-size=8096
+      APP__PORT: 8080
+      APP__BASE_URL: ${OPENCTI_BASE_URL}
+      APP__ADMIN__EMAIL: ${OPENCTI_ADMIN_EMAIL}
+      APP__ADMIN__PASSWORD: ${OPENCTI_ADMIN_PASSWORD}
+      APP__ADMIN__TOKEN: ${OPENCTI_ADMIN_TOKEN}
+      APP__HEALTH_ACCESS_KEY: ${OPENCTI_HEALTHCHECK_ACCESS_KEY}
+      APP__ENCRYPTION_KEY: ${OPENCTI_ENCRYPTION_KEY}
+      APP__APP_LOGS__LOGS_LEVEL: error
+      REDIS__HOSTNAME: redis
+      REDIS__PORT: 6379
+      RABBITMQ__HOSTNAME: rabbitmq
+      RABBITMQ__PORT: 5672
+      RABBITMQ__PORT_MANAGEMENT: 15672
+      RABBITMQ__MANAGEMENT_SSL: false
+      RABBITMQ__USERNAME: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ__PASSWORD: ${RABBITMQ_DEFAULT_PASS}
+      ELASTICSEARCH__URL: http://elasticsearch:9200
+      ELASTICSEARCH__NUMBER_OF_REPLICAS: 0
+      MINIO__ENDPOINT: minio
+      MINIO__PORT: 9000
+      MINIO__USE_SSL: false
+      MINIO__ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO__SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      POSTGRESQL__HOSTNAME: postgres
+      POSTGRESQL__PORT: 5432
+      POSTGRESQL__DATABASE: ${POSTGRES_DB}
+      POSTGRESQL__USERNAME: ${POSTGRES_USER}
+      POSTGRESQL__PASSWORD: ${POSTGRES_PASSWORD}
+      SMTP__HOSTNAME: localhost
+      SMTP__PORT: 25
+      PROVIDERS__LOCAL__STRATEGY: LocalStrategy
+    ports:
+      - "8080:8080"
+
+  worker:
+    image: opencti/worker:6.5.8
+    restart: unless-stopped
+    depends_on:
+      - opencti
+    environment:
+      OPENCTI_URL: http://opencti:8080
+      OPENCTI_TOKEN: ${OPENCTI_ADMIN_TOKEN}
+      WORKER_LOG_LEVEL: info
+      WORKER_JSON_LOGGING: false
+
+  connector-mitre:
+    image: opencti/connector-mitre:6.5.8
+    restart: unless-stopped
+    depends_on:
+      - opencti
+    environment:
+      OPENCTI_URL: http://opencti:8080
+      OPENCTI_TOKEN: ${OPENCTI_ADMIN_TOKEN}
+      CONNECTOR_ID: ${CONNECTOR_MITRE_ID}
+      CONNECTOR_TYPE: EXTERNAL_IMPORT
+      CONNECTOR_NAME: ${CONNECTOR_MITRE_NAME}
+      CONNECTOR_SCOPE: ${CONNECTOR_MITRE_SCOPE}
+      CONNECTOR_AUTO: ${CONNECTOR_MITRE_AUTO}
+      CONNECTOR_LOG_LEVEL: info
+      MITRE_INTERVAL: ${CONNECTOR_MITRE_INTERVAL}
+
+  connector-cisa-kev:
+    image: opencti/connector-cisa-known-exploited-vulnerabilities:6.5.8
+    restart: unless-stopped
+    depends_on:
+      - opencti
+    environment:
+      OPENCTI_URL: http://opencti:8080
+      OPENCTI_TOKEN: ${OPENCTI_ADMIN_TOKEN}
+      CONNECTOR_ID: ${CONNECTOR_CISA_KEV_ID}
+      CONNECTOR_TYPE: EXTERNAL_IMPORT
+      CONNECTOR_NAME: ${CONNECTOR_CISA_KEV_NAME}
+      CONNECTOR_SCOPE: ${CONNECTOR_CISA_KEV_SCOPE}
+      CONNECTOR_AUTO: ${CONNECTOR_CISA_KEV_AUTO}
+      CONNECTOR_LOG_LEVEL: info
+      CISA_INTERVAL: ${CISA_INTERVAL}
+      CISA_CATALOG_URL: ${CISA_CATALOG_URL}
+
+  connector-urlhaus:
+    image: opencti/connector-urlhaus:6.5.8
+    restart: unless-stopped
+    depends_on:
+      - opencti
+    environment:
+      OPENCTI_URL: http://opencti:8080
+      OPENCTI_TOKEN: ${OPENCTI_ADMIN_TOKEN}
+      CONNECTOR_ID: ${CONNECTOR_URLHAUS_ID}
+      CONNECTOR_TYPE: EXTERNAL_IMPORT
+      CONNECTOR_NAME: ${CONNECTOR_URLHAUS_NAME}
+      CONNECTOR_SCOPE: ${CONNECTOR_URLHAUS_SCOPE}
+      CONNECTOR_AUTO: ${CONNECTOR_URLHAUS_AUTO}
+      CONNECTOR_LOG_LEVEL: info
+      URLHAUS_INTERVAL: ${CONNECTOR_URLHAUS_INTERVAL}
+      URLHAUS_CSV_URL: ${URLHAUS_CSV_URL}
+
+  connector-alienvault:
+    image: opencti/connector-alienvault:6.5.8
+    restart: unless-stopped
+    depends_on:
+      - opencti
+    environment:
+      OPENCTI_URL: http://opencti:8080
+      OPENCTI_TOKEN: ${OPENCTI_ADMIN_TOKEN}
+      CONNECTOR_ID: ${CONNECTOR_ALIENVAULT_ID}
+      CONNECTOR_TYPE: EXTERNAL_IMPORT
+      CONNECTOR_NAME: ${CONNECTOR_ALIENVAULT_NAME}
+      CONNECTOR_SCOPE: ${CONNECTOR_ALIENVAULT_SCOPE}
+      CONNECTOR_LOG_LEVEL: info
+      CONNECTOR_DURATION_PERIOD: ${CONNECTOR_ALIENVAULT_DURATION_PERIOD}
+      ALIENVAULT_BASE_URL: ${ALIENVAULT_BASE_URL}
+      ALIENVAULT_API_KEY: ${ALIENVAULT_API_KEY}
+      ALIENVAULT_CREATE_OBSERVABLES: ${ALIENVAULT_CREATE_OBSERVABLES}
+      ALIENVAULT_CREATE_INDICATORS: ${ALIENVAULT_CREATE_INDICATORS}
+      ALIENVAULT_PULSE_START_TIMESTAMP: ${ALIENVAULT_PULSE_START_TIMESTAMP}
+      ALIENVAULT_REPORT_TYPE: ${ALIENVAULT_REPORT_TYPE}
+      ALIENVAULT_REPORT_STATUS: ${ALIENVAULT_REPORT_STATUS}
+      ALIENVAULT_ENABLE_RELATIONSHIPS: ${ALIENVAULT_ENABLE_RELATIONSHIPS}
+      ALIENVAULT_FILTER_INDICATORS: ${ALIENVAULT_FILTER_INDICATORS}
+
+volumes: {}
+

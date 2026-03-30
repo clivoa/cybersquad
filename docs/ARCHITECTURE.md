@@ -23,6 +23,7 @@ A generated workspace contains:
 
 - `personas.yaml`
 - `prompts/` templates
+- `opencti/` optional homelab stack templates (`docker-compose.yml`, `.env.example`)
 - `_cybersquad/` internal state and version marker
 - `.agents/ralph/` loop runtime templates
 - `.agents/tasks/prd.json` loop backlog/state source
@@ -69,7 +70,8 @@ This does:
 
 1. sync `personas.yaml` into `src/cybersquad/template/`
 2. sync source prompt templates into `src/cybersquad/template/prompts/`
-3. exclude generated prompt artifacts (`persona-prompts.generated.md` and `prompts/personas/`)
+3. sync optional OpenCTI lab assets from `opencti/` into `src/cybersquad/template/opencti/`
+4. exclude generated prompt artifacts (`persona-prompts.generated.md` and `prompts/personas/`)
 
 ## Design principles
 

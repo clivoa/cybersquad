@@ -15,6 +15,7 @@ Inspired by strong ideas from `opensquad`, this project now includes:
 - Template-based installation for consistent onboarding
 - `doctor` command for fast environment validation
 - Prompt library + persona evolution playbooks
+- OpenCTI homelab assets (`opencti/`) for reproducible CTI lab setup
 
 ## Quick Start
 
@@ -129,6 +130,10 @@ my-cybersquad/
     triage.md
     incident.md
     ...
+  opencti/
+    docker-compose.yml
+    .env.example
+    README.md
   _cybersquad/
     .cybersquad-version
     config.yaml
@@ -152,6 +157,26 @@ Notes:
 - Default PRD path: `.agents/tasks/prd.json`
 - Default behavior in CyberSquad template: `NO_COMMIT=true` (safer for operational workflows)
 - Loop memory/state is written to `.ralph/`
+
+## OpenCTI + OpenClaw Operations
+
+CyberSquad ships with OpenCTI prompt templates and a Ralph Loop backlog model that works well with OpenClaw cron orchestration.
+
+- OpenCTI stack assets: `opencti/docker-compose.yml` and `opencti/.env.example`
+- Prompt templates:
+  - `prompts/opencti-daily-brief.md`
+  - `prompts/opencti-kev-prioritization.md`
+  - `prompts/opencti-financial-hunting-review.md`
+- Loop backlog seed: `src/cybersquad/template/.agents/tasks/prd.json`
+
+Recommended auth model for homelab:
+
+- One technical OpenCTI account + one API token for automation
+- Persona ownership tracked in story metadata and report output (no need for one OpenCTI user per persona)
+
+For full integration guidance, see:
+
+- [docs/OPENCTI-OPENCLAW-RALPH.md](docs/OPENCTI-OPENCLAW-RALPH.md)
 
 ## Daily Workflow
 

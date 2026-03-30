@@ -97,7 +97,7 @@ def build_parser() -> argparse.ArgumentParser:
     sync_cmd.add_argument(
         "--repo-root",
         default=".",
-        help="Repository root containing personas.yaml, prompts/, and src/cybersquad/template/",
+        help="Repository root containing personas.yaml, prompts/, optional opencti/, and src/cybersquad/template/",
     )
     sync_cmd.add_argument(
         "--overwrite",

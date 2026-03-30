@@ -5,6 +5,7 @@ CyberSquad should stay practical, lightweight, and easy to onboard.
 Source of truth:
 
 - `personas.yaml` in repo root is the canonical persona catalog.
+- `opencti/` in repo root is the canonical OpenCTI homelab asset folder.
 - `src/cybersquad/template/personas.yaml` is generated/synced for packaging.
 
 ## Golden Rule
@@ -45,6 +46,7 @@ Avoid:
 1. Edit source files in root:
    - `personas.yaml`
    - `prompts/*.md`
+   - `opencti/*` (if OpenCTI stack assets need updates)
 2. Regenerate prompt artifacts in workspace source:
    - `cybersquad generate prompts --workspace . --overwrite`
 3. Sync template from source files:
@@ -61,6 +63,7 @@ Notes:
 
 - Generated persona prompt artifacts are created during `cybersquad init`.
 - Template sync excludes generated artifacts (`persona-prompts.generated.md` and `prompts/personas/`) to avoid duplicated tracked files.
+- Template sync includes OpenCTI assets (`opencti/`) and skips local-only artifacts (`.env`, `data/`).
 
 Windows maintainers can run:
 

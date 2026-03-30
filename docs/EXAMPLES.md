@@ -289,3 +289,18 @@ Decision needed:
 - Always include `Decision needed`.
 - Use single-role mode for speed, dual-role mode for validation, multi-role for high-impact decisions.
 - Ask for confidence and assumptions when the decision is sensitive.
+
+## 11) OpenCTI daily chain with persona owners
+
+Use this pattern when running OpenCTI routines via scheduler (for example OpenClaw cron):
+
+1. `09:00` Orion-led Daily Financial CTI Brief (`prompts/opencti-daily-brief.md`)
+2. `09:20` Patch-led KEV Prioritization (`prompts/opencti-kev-prioritization.md`)
+3. `09:40` Raven-led Financial Hunting Review (`prompts/opencti-financial-hunting-review.md`)
+
+Suggested run constraints:
+
+- Keep one technical OpenCTI API token for all automation jobs
+- Keep persona ownership in the output header (`Lead analyst`, `Supporting lenses`)
+- Write recurring outputs under `outputs/opencti/`
+- Use Ralph Loop for improvement stories (layout tuning, labeling curation, feed-quality review)

@@ -111,6 +111,28 @@ cybersquad loop overview --workspace .
 cybersquad loop build --workspace . --iterations 1 --agent codex --no-commit
 ```
 
+## Optional: bootstrap local OpenCTI lab stack
+
+CyberSquad includes an OpenCTI homelab stack under `opencti/`.
+
+```powershell
+Copy-Item .\opencti\docker-compose.yml D:\opencti\docker-compose.yml -Force
+Copy-Item .\opencti\.env.example D:\opencti\.env -Force
+```
+
+Then edit `D:\opencti\.env` and replace every `CHANGE_ME_*` value before startup:
+
+```powershell
+cd D:\opencti
+docker compose up -d
+docker compose logs -f opencti
+```
+
+See:
+
+- `opencti/README.md`
+- `docs/OPENCTI-OPENCLAW-RALPH.md`
+
 ## Generate usage prompts
 
 ```bash
