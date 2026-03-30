@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Iterable
 
 from . import __version__
+from .loops import install_loop_templates, loop_build, loop_doctor, loop_overview
 from .maint import sync_template
 from .personas import load_personas, parse_personas_yaml
 from .promptgen import generate_usage_prompts
@@ -104,6 +105,69 @@ def build_parser() -> argparse.ArgumentParser:
         help="Overwrite existing template files",
     )
 
+    loop_cmd = sub.add_parser("loop", help="Manage Ralph-style loop runtime")
+    loop_sub = loop_cmd.add_subparsers(dest="loop_command")
+
+    loop_install = loop_sub.add_parser(
+        "install",
+        help="Install loop templates (.agents/ralph and .agents/tasks) into a workspace",
+    )
+    loop_install.add_argument("--workspace", default=".", help="Workspace directory")
+    loop_install.add_argument("--force", action="store_true", help="Overwrite existing loop files")
+
+    loop_doctor_cmd = loop_sub.add_parser("doctor", help="Validate loop runtime setup")
+    loop_doctor_cmd.add_argument("--workspace", default=".", help="Workspace directory")
+    loop_doctor_cmd.add_argument(
+        "--agent",
+        choices=["codex", "claude", "droid", "opencode"],
+        default="codex",
+        help="Agent CLI to validate",
+    )
+
+    loop_overview_cmd = loop_sub.add_parser(
+        "overview", help="Show PRD story status summary for the loop"
+    )
+    loop_overview_cmd.add_argument("--workspace", default=".", help="Workspace directory")
+    loop_overview_cmd.add_argument(
+        "--prd",
+        default=None,
+        help="PRD JSON path (default: .agents/tasks/prd.json)",
+    )
+
+    loop_build_cmd = loop_sub.add_parser(
+        "build", help="Run Ralph-style build loop for the selected PRD"
+    )
+    loop_build_cmd.add_argument("--workspace", default=".", help="Workspace directory")
+    loop_build_cmd.add_argument(
+        "--iterations", type=int, default=1, help="Number of loop iterations"
+    )
+    loop_build_cmd.add_argument(
+        "--agent",
+        choices=["codex", "claude", "droid", "opencode"],
+        default="codex",
+        help="Agent CLI to use",
+    )
+    loop_build_cmd.add_argument(
+        "--prd",
+        default=None,
+        help="PRD JSON path (default: .agents/tasks/prd.json)",
+    )
+    loop_build_cmd.add_argument(
+        "--progress",
+        default=None,
+        help="Progress log path override",
+    )
+    loop_build_cmd.add_argument(
+        "--no-commit",
+        action="store_true",
+        help="Disable commits for this run",
+    )
+    loop_build_cmd.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Run loop flow without calling the agent",
+    )
+
     sub.add_parser("version", help="Show installed version")
     return parser
 
@@ -140,6 +204,30 @@ def main(argv: Iterable[str] | None = None) -> int:
 
     if args.command == "sync-template":
         return sync_template(Path(args.repo_root), overwrite=args.overwrite)
+
+    if args.command == "loop":
+        workspace = Path(getattr(args, "workspace", "."))
+        if args.loop_command == "install":
+            return install_loop_templates(workspace=workspace, force=args.force)
+        if args.loop_command == "doctor":
+            return loop_doctor(workspace=workspace, agent=args.agent)
+        if args.loop_command == "overview":
+            return loop_overview(workspace=workspace, prd=args.prd)
+        if args.loop_command == "build":
+            if args.iterations < 1:
+                print("--iterations must be >= 1")
+                return 1
+            return loop_build(
+                workspace=workspace,
+                iterations=args.iterations,
+                agent=args.agent,
+                prd=args.prd,
+                progress=args.progress,
+                no_commit=args.no_commit,
+                dry_run=args.dry_run,
+            )
+        print("Missing loop subcommand. Use: cybersquad loop [install|doctor|overview|build]")
+        return 1
 
     if args.command == "version":
         print(__version__)

@@ -14,6 +14,8 @@ CyberSquad is intentionally file-first and lightweight.
   - Prompt generation engine for persona usage docs.
 - `src/cybersquad/maint.py`
   - Maintainer workflow to regenerate artifacts and sync packaged template.
+- `src/cybersquad/loops.py`
+  - Ralph-style loop installer, doctor checks, overview, and build runner wrappers.
 
 ## Workspace model
 
@@ -22,6 +24,9 @@ A generated workspace contains:
 - `personas.yaml`
 - `prompts/` templates
 - `_cybersquad/` internal state and version marker
+- `.agents/ralph/` loop runtime templates
+- `.agents/tasks/prd.json` loop backlog/state source
+- `.ralph/` loop memory (progress, guardrails, activity, errors, runs)
 
 Study templates are included in `prompts/`:
 

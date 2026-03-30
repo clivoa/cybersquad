@@ -7,6 +7,14 @@ setup(
     package_dir={"": "src"},
     packages=find_packages(where="src"),
     include_package_data=True,
-    package_data={"cybersquad": ["template/**"]},
+    package_data={
+        "cybersquad": [
+            "template/**",
+            "template/.agents/**",
+            "template/.agents/ralph/**",
+            "template/.agents/ralph/references/**",
+            "template/.agents/tasks/**",
+        ]
+    },
     entry_points={"console_scripts": ["cybersquad=cybersquad.cli:main"]},
 )

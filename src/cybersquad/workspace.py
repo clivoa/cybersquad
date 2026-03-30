@@ -64,6 +64,11 @@ def init_workspace(target: Path, force: bool, language: str) -> int:
     skipped: list[str] = []
 
     _copy_tree(template_root(), target, force, created, skipped)
+    # Some resource backends may not include hidden entries when iterating the
+    # template root, so copy loop templates explicitly.
+    agents_src = template_root().joinpath(".agents")
+    if agents_src.exists():
+        _copy_tree(agents_src, target / ".agents", force, created, skipped)
 
     prefs_path = target / "_cybersquad" / "_memory" / "preferences.md"
     prefs_path.parent.mkdir(parents=True, exist_ok=True)
@@ -93,6 +98,7 @@ def init_workspace(target: Path, force: bool, language: str) -> int:
     print("1) Open prompts/master-prompt.md")
     print("2) Pick one prompt from prompts/persona-prompts.generated.md")
     print("3) Run a scenario template from prompts/")
+    print("4) Optional: run Ralph-style loops with `cybersquad loop doctor --workspace .`")
 
     return 0
 

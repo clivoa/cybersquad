@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "project": "CyberSquad OpenCTI Operations Loop",
+  "overview": "Iterative loop for CTI ingestion, prioritization, and operational handoff using CyberSquad personas.",
+  "goals": [
+    "Convert daily OpenCTI intake into actionable decisions",
+    "Preserve structured memory across loop iterations",
+    "Support repeatable persona collaboration with auditable outputs"
+  ],
+  "nonGoals": [
+    "No direct destructive write operations in OpenCTI",
+    "No secret storage in repository files"
+  ],
+  "successMetrics": [
+    "Daily brief produced with evidence, assumptions, and confidence",
+    "Action plan includes owner and SLA for each priority item"
+  ],
+  "openQuestions": [
+    "Which OpenCTI entities should be auto-tagged vs manually reviewed?"
+  ],
+  "qualityGates": [
+    "python3 -m json.tool .agents/tasks/prd.json > /dev/null"
+  ],
+  "stories": [
+    {
+      "id": "US-001",
+      "title": "Create OpenCTI operating context for personas",
+      "status": "open",
+      "dependsOn": [],
+      "description": "As Orion (CTI), I want a consistent operating context so future iterations can prioritize intel with less ambiguity.",
+      "acceptanceCriteria": [
+        "Create `_cybersquad/_memory/opencti-context.md` with: data sources, sector focus, severity rubric, confidence rubric",
+        "Example: include one scored item showing severity + confidence",
+        "Negative case: missing confidence rubric should fail validation"
+      ]
+    },
+    {
+      "id": "US-002",
+      "title": "Generate daily OpenCTI intelligence brief",
+      "status": "open",
+      "dependsOn": [
+        "US-001"
+      ],
+      "description": "As Orion (CTI) with Raven (Hunter), I want a concise daily brief so SOC and detection teams can focus on high-value threats.",
+      "acceptanceCriteria": [
+        "Create `outputs/opencti/daily-brief.md` using the structure from `prompts/opencti-daily-brief.md`",
+        "Include at least 3 prioritized items with rationale and ATT&CK mapping where available",
+        "Example: one item maps to concrete hunt hypothesis",
+        "Negative case: item without relevance rationale should fail validation"
+      ]
+    },
+    {
+      "id": "US-003",
+      "title": "Create actionable handoff plan",
+      "status": "open",
+      "dependsOn": [
+        "US-002"
+      ],
+      "description": "As Atlas (SOC) + Forge (Detection) + Patch (VulnOps), I want an action plan so operations can execute quickly.",
+      "acceptanceCriteria": [
+        "Create `outputs/opencti/action-plan.md` with sections: Now (<=24h), Next (<=72h), Later (<=30d)",
+        "Each action includes owner persona, expected outcome, and confidence score",
+        "Example: at least one detection tuning action and one vulnerability prioritization action",
+        "Negative case: action without owner or timeline should fail validation"
+      ]
+    }
+  ]
+}

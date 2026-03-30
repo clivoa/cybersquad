@@ -11,6 +11,9 @@ This folder contains ready-to-use prompt templates for common day-to-day cyberse
 - `incident.md`: Incident containment, eradication, and recovery planning.
 - `vuln-prioritization.md`: Risk-based remediation prioritization.
 - `threat-hunting.md`: Hypothesis-driven proactive hunting workflow.
+- `opencti-daily-brief.md`: Recurring OpenCTI-driven CTI briefing for financial-sector relevance.
+- `opencti-kev-prioritization.md`: OpenCTI-based KEV prioritization and remediation framing.
+- `opencti-financial-hunting-review.md`: OpenCTI-based financial threat hunting review.
 - `detection-validation.md`: Detection QA and validation workflow before release.
 - `cloud-misconfig-review.md`: Cloud configuration risk review and remediation planning.
 - `appsec-review.md`: Application security review and secure release decisions.

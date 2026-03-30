@@ -13,6 +13,7 @@ This document records what was borrowed from `opensquad` and how it was adapted 
 | CLI discoverability | `list`, `doctor`, `version` commands | Better usability for non-maintainers |
 | Opinionated docs and contribution path | README + INSTALL + USAGE + CONTRIBUTING | Easier adoption and community contribution |
 | Prompt-driven extensibility | Generated persona prompts + study templates | Faster onboarding for operations and learning |
+| File-based iterative loops (Ralph-inspired) | `.agents/ralph` + `.ralph` + `cybersquad loop ...` | Repeatable one-story iterations with durable memory |
 
 ## What we intentionally did not copy
 

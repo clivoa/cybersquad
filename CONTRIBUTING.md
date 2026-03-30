@@ -37,6 +37,7 @@ Avoid:
 - Prompt generation logic in `src/cybersquad/promptgen.py`
 - Persona parser in `src/cybersquad/personas.py`
 - Workspace lifecycle in `src/cybersquad/workspace.py`
+- Ralph loop runtime in `src/cybersquad/loops.py` and `src/cybersquad/template/.agents/ralph/`
 - Documentation and onboarding improvements
 
 ## Prompt change flow
@@ -52,6 +53,9 @@ Avoid:
    - `./bin/cybersquad list personas --from-template`
    - `./bin/cybersquad init /tmp/cybersquad-test --force`
    - `./bin/cybersquad doctor --workspace /tmp/cybersquad-test`
+   - `./bin/cybersquad loop doctor --workspace /tmp/cybersquad-test`
+   - `./bin/cybersquad loop overview --workspace /tmp/cybersquad-test`
+   - `./bin/cybersquad loop build --workspace /tmp/cybersquad-test --iterations 1 --dry-run --no-commit`
 
 Notes:
 

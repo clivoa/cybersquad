@@ -37,4 +37,10 @@ include-package-data = true
 where = ["src"]
 
 [tool.setuptools.package-data]
-cybersquad = ["template/**"]
+cybersquad = [
+  "template/**",
+  "template/.agents/**",
+  "template/.agents/ralph/**",
+  "template/.agents/ralph/references/**",
+  "template/.agents/tasks/**",
+]

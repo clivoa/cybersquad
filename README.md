@@ -76,6 +76,10 @@ py -m cybersquad init .\my-cybersquad
 | `cybersquad generate prompts` | Generate persona usage prompts from `personas.yaml` |
 | `cybersquad sync-template` | Sync source prompts/personas into packaged template (maintainers) |
 | `cybersquad doctor` | Validate workspace integrity |
+| `cybersquad loop install` | Install Ralph-style loop runtime into a workspace |
+| `cybersquad loop doctor` | Validate loop files and selected agent CLI |
+| `cybersquad loop overview` | Show story status summary from loop PRD |
+| `cybersquad loop build` | Run one or more Ralph-style iterations |
 | `cybersquad version` | Show installed version |
 
 Examples:
@@ -85,12 +89,32 @@ cybersquad list personas --from-template
 cybersquad generate prompts --workspace . --overwrite
 cybersquad init . --force --language en-US
 cybersquad doctor --workspace .
+cybersquad loop doctor --workspace .
+cybersquad loop overview --workspace .
+cybersquad loop build --workspace . --iterations 1 --agent codex --no-commit
 ```
 
 ## Installed Workspace Layout
 
 ```text
 my-cybersquad/
+  .agents/
+    ralph/
+      loop.sh
+      PROMPT_build.md
+      config.sh
+      agents.sh
+      references/
+        GUARDRAILS.md
+        CONTEXT_ENGINEERING.md
+    tasks/
+      prd.json
+  .ralph/  # created on first loop execution
+    progress.md
+    guardrails.md
+    errors.log
+    activity.log
+    runs/
   personas.yaml
   prompts/
     master-prompt.md
@@ -111,6 +135,23 @@ my-cybersquad/
     _memory/
       preferences.md
 ```
+
+## Ralph Loops in CyberSquad
+
+CyberSquad now ships with a Ralph-style loop runtime (inspired by `ralph` and `ralph_codex`) so you can execute one scoped story per iteration with persistent file-based memory.
+
+Quick start:
+
+```bash
+cybersquad loop doctor --workspace .
+cybersquad loop overview --workspace .
+cybersquad loop build --workspace . --iterations 1 --agent codex --no-commit
+```
+
+Notes:
+- Default PRD path: `.agents/tasks/prd.json`
+- Default behavior in CyberSquad template: `NO_COMMIT=true` (safer for operational workflows)
+- Loop memory/state is written to `.ralph/`
 
 ## Daily Workflow
 

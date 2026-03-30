@@ -102,6 +102,15 @@ macOS/Linux:
 python3 -m cybersquad doctor --workspace ./my-cybersquad
 ```
 
+## Validate and run loop runtime
+
+```bash
+cd ./my-cybersquad
+cybersquad loop doctor --workspace .
+cybersquad loop overview --workspace .
+cybersquad loop build --workspace . --iterations 1 --agent codex --no-commit
+```
+
 ## Generate usage prompts
 
 ```bash

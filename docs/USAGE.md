@@ -81,3 +81,20 @@ Require these fields in every response:
 - Decision needed
 - Assumptions
 - Confidence (0-100)
+
+## Ralph-style loops
+
+CyberSquad includes a Ralph-style loop runtime in `.agents/ralph/` with default task backlog at `.agents/tasks/prd.json`.
+
+Useful commands:
+
+```bash
+cybersquad loop doctor --workspace .
+cybersquad loop overview --workspace .
+cybersquad loop build --workspace . --iterations 1 --agent codex --no-commit
+```
+
+Notes:
+- Use one story per iteration (`open` -> `in_progress` -> `done`).
+- Loop memory is file-based in `.ralph/` (`progress.md`, `guardrails.md`, `errors.log`, `activity.log`).
+- CyberSquad template defaults to `NO_COMMIT=true` for safer operational use.
