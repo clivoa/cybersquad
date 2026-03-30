@@ -101,6 +101,7 @@
         "Create `outputs/opencti/financial-hunting-review-YYYY-MM-DD.md` using `prompts/opencti-financial-hunting-review.md`",
         "Include 1-3 actionable hypotheses with suggested telemetry",
         "Include detection opportunities and confidence/caveats",
+        "Include a detection logic starter section (Sigma plus at least one platform-specific draft when confidence is sufficient)",
         "Negative case: reject generic commentary with no hunting action"
       ]
     },
@@ -189,6 +190,29 @@
         "Assess at least OTX, URLhaus, KEV, and MITRE signal usefulness for financial-sector workflows",
         "Include recommendations: keep, tune, or de-prioritize each source",
         "Negative case: avoid scoring without clear criteria"
+      ]
+    },
+    {
+      "id": "DF-008",
+      "title": "Translate Hunt Hypotheses into Detection Logic",
+      "track": "improvement",
+      "owner": "Forge (Detection)",
+      "supportingLenses": [
+        "Raven (Hunter)",
+        "Orion (CTI)",
+        "Atlas (SOC)"
+      ],
+      "status": "open",
+      "dependsOn": [
+        "DF-003"
+      ],
+      "description": "As Forge, I want high-confidence hunting hypotheses translated into reusable detection logic so the team can test and operationalize detections faster.",
+      "acceptanceCriteria": [
+        "Create `outputs/opencti/detection-translation-YYYY-MM-DD.md` using `prompts/opencti-hunting-detection-translation.md`",
+        "Include at least one Sigma draft and one platform query draft (SPL, CQL, or Elastic KQL/EQL)",
+        "Search and document near matches from SigmaHQ, CrowdStrike LogScale, Splunk security_content, and Elastic detection-rules repositories",
+        "Include tuning guidance and a validation plan before production use",
+        "Negative case: avoid presenting unvalidated drafts as production-ready detections"
       ]
     }
   ]

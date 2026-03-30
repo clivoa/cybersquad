@@ -167,6 +167,7 @@ CyberSquad ships with OpenCTI prompt templates and a Ralph Loop backlog model th
   - `prompts/opencti-daily-brief.md`
   - `prompts/opencti-kev-prioritization.md`
   - `prompts/opencti-financial-hunting-review.md`
+  - `prompts/opencti-hunting-detection-translation.md`
 - Loop backlog seed: `src/cybersquad/template/.agents/tasks/prd.json`
 
 Recommended auth model for homelab:

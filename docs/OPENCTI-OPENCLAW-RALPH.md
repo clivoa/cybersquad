@@ -66,6 +66,11 @@ The template PRD is pre-seeded with this model:
 
 - `src/cybersquad/template/.agents/tasks/prd.json`
 
+Hunting-to-detection extension in the backlog:
+
+- `DF-003`: hunting hypotheses with a detection starter section
+- `DF-008`: explicit translation of hypotheses into Sigma/SPL/CQL/Elastic drafts
+
 ## OpenClaw Cron Integration Pattern
 
 OpenClaw cron is suitable for recurring routines that produce final analyst output on schedule.
@@ -87,6 +92,13 @@ Ready-to-use OpenClaw template files:
 
 - `docs/OPENCLAW-OPENCTI-JOBS.example.json`
 - `docs/OPENCLAW-SCHEDULING.md`
+
+Reference repositories for detection reuse/adaptation:
+
+- `https://github.com/SigmaHQ/sigma/tree/master/rules`
+- `https://github.com/CrowdStrike/logscale-community-content/tree/main/Queries-Only`
+- `https://github.com/splunk/security_content/tree/develop/detections`
+- `https://github.com/elastic/detection-rules`
 
 ## Safe-by-Default Collaboration Rules
 

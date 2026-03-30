@@ -304,3 +304,39 @@ Suggested run constraints:
 - Keep persona ownership in the output header (`Lead analyst`, `Supporting lenses`)
 - Write recurring outputs under `outputs/opencti/`
 - Use Ralph Loop for improvement stories (layout tuning, labeling curation, feed-quality review)
+
+## 12) Hunting hypothesis to detection logic (Sigma/SPL/CQL/Elastic)
+
+Use when a hunting hypothesis has enough evidence to justify detection engineering follow-up.
+
+Prompt:
+
+```text
+Role(s): Forge (Detection) + Raven (Hunter) + Orion (CTI)
+Context:
+- Source: latest `financial-hunting-review` output from OpenCTI workflow
+- Environment: SIEM + EDR + identity telemetry for financial use cases
+Objective:
+- Convert 1-2 high-confidence hypotheses into practical detection logic drafts.
+Inputs:
+- Hypotheses, ATT&CK mapping, required fields, expected attacker behavior
+- Existing rule/query candidates from:
+  - https://github.com/SigmaHQ/sigma/tree/master/rules
+  - https://github.com/CrowdStrike/logscale-community-content/tree/main/Queries-Only
+  - https://github.com/splunk/security_content/tree/develop/detections
+  - https://github.com/elastic/detection-rules
+Constraints:
+- Prefer adapting existing content before creating fully new logic
+- Label each draft as draft/validated
+Output format:
+- Hypothesis summary
+- Existing content matches (repo + path + rationale)
+- Sigma draft
+- SPL draft
+- CQL draft
+- Elastic draft (KQL or EQL)
+- Tuning notes
+- Validation plan
+Decision needed:
+- [Create detection ticket / Tune and test / Keep hunt-only]
+```

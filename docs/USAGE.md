@@ -116,4 +116,9 @@ See:
 - `prompts/opencti-daily-brief.md`
 - `prompts/opencti-kev-prioritization.md`
 - `prompts/opencti-financial-hunting-review.md`
+- `prompts/opencti-hunting-detection-translation.md`
 - `docs/OPENCTI-OPENCLAW-RALPH.md`
+
+If you need concrete logic drafts, run the translation template after hunting:
+
+- `prompts/opencti-hunting-detection-translation.md`

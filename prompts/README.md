@@ -14,6 +14,7 @@ This folder contains ready-to-use prompt templates for common day-to-day cyberse
 - `opencti-daily-brief.md`: Recurring OpenCTI-driven CTI briefing for financial-sector relevance.
 - `opencti-kev-prioritization.md`: OpenCTI-based KEV prioritization and remediation framing.
 - `opencti-financial-hunting-review.md`: OpenCTI-based financial threat hunting review.
+- `opencti-hunting-detection-translation.md`: Convert OpenCTI hunting hypotheses into Sigma/SPL/CQL/Elastic detection drafts.
 - `detection-validation.md`: Detection QA and validation workflow before release.
 - `cloud-misconfig-review.md`: Cloud configuration risk review and remediation planning.
 - `appsec-review.md`: Application security review and secure release decisions.

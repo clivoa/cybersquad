@@ -11,6 +11,7 @@ This file explains how to use the ready OpenClaw cron job template for the Cyber
 - Daily Financial CTI Brief (`09:00`, Europe/Paris)
 - Financial KEV Prioritization Review (`09:20`, Europe/Paris)
 - Financial Threat Hunting Review (`09:40`, Europe/Paris)
+- Hunting Detection Translation (`10:00`, Europe/Paris, weekdays, disabled by default)
 
 ## Delivery Mode
 
