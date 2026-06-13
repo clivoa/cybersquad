@@ -18,6 +18,36 @@ This stack is for local lab and learning use, not production.
 - Data plane: `postgres`, `redis`, `rabbitmq`, `minio`, `elasticsearch`
 - Connectors: MITRE, CISA KEV, URLhaus, AlienVault OTX
 
+## Quick Start (Linux / macOS)
+
+1. Create local data folders:
+
+```bash
+mkdir -p ~/opencti/data/{redis,rabbitmq,postgres,minio,elasticsearch}
+```
+
+2. Copy stack files:
+
+```bash
+cp opencti/docker-compose.yml ~/opencti/docker-compose.yml
+cp opencti/.env.example ~/opencti/.env
+```
+
+3. Edit `~/opencti/.env` and replace every `CHANGE_ME_*` value.
+
+4. Start the stack:
+
+```bash
+cd ~/opencti
+docker compose up -d
+```
+
+5. Check startup logs:
+
+```bash
+docker compose logs -f opencti
+```
+
 ## Quick Start (Windows)
 
 1. Create local data folders:

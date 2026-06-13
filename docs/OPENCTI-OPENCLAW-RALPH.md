@@ -8,7 +8,7 @@ Make OpenCTI workflows repeatable and shareable for homelab and team onboarding 
 
 ## Architecture Model
 
-- OpenCTI: data platform and object graph (reports, indicators, vulnerabilities, ATTACK mapping, relationships)
+- OpenCTI: data platform and object graph (reports, indicators, vulnerabilities, ATT&CK mapping, relationships)
 - CyberSquad personas: analytical specialists and decision lenses
 - Ralph Loop (`.agents/tasks/prd.json` + `.ralph/`): iterative backlog executor with progress tracking and guardrails
 - OpenClaw cron jobs: schedule recurring persona-led reviews

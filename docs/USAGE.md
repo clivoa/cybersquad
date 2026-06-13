@@ -41,8 +41,15 @@ cybersquad generate prompts --workspace . --overwrite
 
 This updates:
 
-- `prompts/persona-prompts.generated.md`
-- `prompts/personas/*.md`
+- `prompts/persona-prompts.generated.md` — combined file with all personas
+- `prompts/personas/*.md` — one file per persona
+
+Each generated persona entry includes:
+- Seniority level and mission statement
+- When to consult and communication style
+- Key tools (from `technical_skills` in `personas.yaml`)
+- Expected outputs and escalation triggers
+- Quick, collaborative, skill-improvement, and study prompts
 
 ## Recommended operating rhythm
 

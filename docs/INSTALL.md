@@ -32,7 +32,7 @@ python3 -m pip install -e .
 cybersquad version
 ```
 
-If editable install fails due older `pip`, either:
+If editable install fails due to an older `pip`, either:
 
 ```bash
 python3 -m pip install --upgrade pip

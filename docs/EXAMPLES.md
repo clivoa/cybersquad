@@ -68,13 +68,15 @@ Decision needed:
 
 Use when you want a daily executive analysis from S33R outputs.
 
+Replace `~/S33R` with the actual path to your S33R installation and `~/my-cybersquad` with your workspace path.
+
 ### 3.1 Validate source data
 
 ```bash
 python3 - <<'PY'
 import json
 from pathlib import Path
-p = Path('/Users/clivoa/Documents/Github/S33R/data/morning_call_latest.json')
+p = Path.home() / 'S33R/data/morning_call_latest.json'
 d = json.loads(p.read_text())
 print('analysis_date:', d.get('analysis_date'))
 print('generated_at:', d.get('generated_at'))
@@ -91,7 +93,7 @@ Task:
 Analyze today's S33R Morning Call and produce a professional multi-role report with participation from all personas.
 
 Read input from:
-- /Users/clivoa/Documents/Github/S33R/data/morning_call_latest.json
+- ~/S33R/data/morning_call_latest.json
 
 Use these fields:
 - analysis_date
@@ -121,8 +123,8 @@ Output format (Markdown):
 8) Final Decision Needed
 
 Then save files:
-- /Users/clivoa/Documents/Github/cybersquad/outputs/morning-call-YYYY-MM-DD-squad.md
-- /Users/clivoa/Documents/Github/cybersquad/outputs/morning-call-YYYY-MM-DD-squad.pdf
+- ~/my-cybersquad/outputs/morning-call-YYYY-MM-DD-squad.md
+- ~/my-cybersquad/outputs/morning-call-YYYY-MM-DD-squad.pdf
 
 If a PDF tool is available, generate the PDF automatically.
 If not, still save Markdown and clearly state which command I should run to generate the PDF.
@@ -132,13 +134,13 @@ If not, still save Markdown and clearly state which command I should run to gene
 
 ```bash
 # Option A: pandoc (if installed)
-pandoc /Users/clivoa/Documents/Github/cybersquad/outputs/morning-call-YYYY-MM-DD-squad.md \
-  -o /Users/clivoa/Documents/Github/cybersquad/outputs/morning-call-YYYY-MM-DD-squad.pdf
+pandoc ~/my-cybersquad/outputs/morning-call-YYYY-MM-DD-squad.md \
+  -o ~/my-cybersquad/outputs/morning-call-YYYY-MM-DD-squad.pdf
 
 # Option B: macOS cupsfilter
 cupsfilter -m application/pdf \
-  /Users/clivoa/Documents/Github/cybersquad/outputs/morning-call-YYYY-MM-DD-squad.md \
-  > /Users/clivoa/Documents/Github/cybersquad/outputs/morning-call-YYYY-MM-DD-squad.pdf
+  ~/my-cybersquad/outputs/morning-call-YYYY-MM-DD-squad.md \
+  > ~/my-cybersquad/outputs/morning-call-YYYY-MM-DD-squad.pdf
 ```
 
 ## 4) Detection engineering + QA gate

@@ -26,6 +26,7 @@ Your task is to complete exactly one story from the selected PRD and record the 
   - `prompts/opencti-daily-brief.md`
   - `prompts/opencti-kev-prioritization.md`
   - `prompts/opencti-financial-hunting-review.md`
+  - `prompts/opencti-hunting-detection-translation.md`
 
 ## Global Quality Gates (apply to every story)
 {{QUALITY_GATES}}

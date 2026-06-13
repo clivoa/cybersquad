@@ -145,7 +145,7 @@ The Ralph hooks can automatically detect some patterns and suggest signs:
 - **Repeated errors**: Same test failing → "Check the test assumptions"
 - **Large changes**: Big diffs → "Consider smaller increments"
 
-These are logged in `.ralph/failures.md` and can be promoted to guardrails.
+These are logged in `.ralph/errors.log` and can be promoted to guardrails.
 
 ## Using Signs Effectively
 

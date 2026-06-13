@@ -38,6 +38,7 @@ Avoid:
 - Prompt generation logic in `src/cybersquad/promptgen.py`
 - Persona parser in `src/cybersquad/personas.py`
 - Workspace lifecycle in `src/cybersquad/workspace.py`
+- Shared utilities in `src/cybersquad/_utils.py`
 - Ralph loop runtime in `src/cybersquad/loops.py` and `src/cybersquad/template/.agents/ralph/`
 - Documentation and onboarding improvements
 

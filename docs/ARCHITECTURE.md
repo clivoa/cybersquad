@@ -2,6 +2,53 @@
 
 CyberSquad is intentionally file-first and lightweight.
 
+## Module dependency and data flow
+
+```mermaid
+graph TD
+    subgraph CLI
+        cli[cli.py\ncommand routing]
+    end
+
+    subgraph Core
+        ws[workspace.py\ninit · doctor · list]
+        lo[loops.py\nloop install/doctor/build]
+        pg[promptgen.py\nprompt renderer]
+        pe[personas.py\nYAML parser]
+        ma[maint.py\nsync-template]
+        ut[_utils.py\ncopy_tree]
+    end
+
+    subgraph Inputs
+        yaml[(personas.yaml)]
+        tpl[(template/)]
+    end
+
+    subgraph Outputs
+        wksp[(workspace/)]
+        gen[(prompts/generated)]
+    end
+
+    cli --> ws
+    cli --> lo
+    cli --> pg
+    cli --> ma
+
+    ws --> ut
+    ws --> pe
+    ws --> pg
+    lo --> ut
+    lo --> ws
+    pg --> pe
+    ma --> tpl
+
+    yaml --> pe
+    pe --> pg
+    pg --> gen
+    ut --> wksp
+    tpl --> ut
+```
+
 ## Core modules
 
 - `src/cybersquad/cli.py`
@@ -9,13 +56,15 @@ CyberSquad is intentionally file-first and lightweight.
 - `src/cybersquad/workspace.py`
   - Workspace bootstrap (`init`), prompt listing, and health check (`doctor`).
 - `src/cybersquad/personas.py`
-  - Persona parsing from `personas.yaml` into typed objects.
+  - Persona parsing from `personas.yaml` into typed `Persona` objects (id, name, role, seniority, mission, core_expertise, technical_skills, responsibilities, consult_when, outputs, escalation_triggers).
 - `src/cybersquad/promptgen.py`
-  - Prompt generation engine for persona usage docs.
+  - Prompt generation engine: renders per-persona and combined usage docs from parsed personas.
 - `src/cybersquad/maint.py`
   - Maintainer workflow to regenerate artifacts and sync packaged template.
 - `src/cybersquad/loops.py`
   - Ralph-style loop installer, doctor checks, overview, and build runner wrappers.
+- `src/cybersquad/_utils.py`
+  - Shared utilities (recursive template copy helper used by `workspace.py` and `loops.py`).
 
 ## Workspace model
 
