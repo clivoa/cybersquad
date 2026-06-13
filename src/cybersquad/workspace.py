@@ -9,6 +9,7 @@ try:
 except ImportError:  # pragma: no cover
     import importlib_resources as resources  # type: ignore
 
+from ._utils import copy_tree
 from .personas import parse_personas_yaml
 from .promptgen import generate_usage_prompts
 
@@ -28,25 +29,9 @@ def read_template_text(relative_path: str) -> str:
     return template_root().joinpath(relative_path).read_text(encoding="utf-8")
 
 
-def _copy_tree(src, dst: Path, force: bool, created: list[str], skipped: list[str]) -> None:
-    if src.is_dir():
-        dst.mkdir(parents=True, exist_ok=True)
-        for child in src.iterdir():
-            _copy_tree(child, dst / child.name, force, created, skipped)
-        return
-
-    if dst.exists() and not force:
-        skipped.append(str(dst))
-        return
-
-    dst.parent.mkdir(parents=True, exist_ok=True)
-    dst.write_bytes(src.read_bytes())
-    created.append(str(dst))
-
-
 def _render_preferences(language: str) -> str:
     user = os.environ.get("USER") or os.environ.get("USERNAME") or "unknown"
-    now = dt.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+    now = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
     return (
         "# CyberSquad Preferences\n\n"
         f"- User: {user}\n"
@@ -63,12 +48,12 @@ def init_workspace(target: Path, force: bool, language: str) -> int:
     created: list[str] = []
     skipped: list[str] = []
 
-    _copy_tree(template_root(), target, force, created, skipped)
+    copy_tree(template_root(), target, force, created, skipped)
     # Some resource backends may not include hidden entries when iterating the
     # template root, so copy loop templates explicitly.
     agents_src = template_root().joinpath(".agents")
     if agents_src.exists():
-        _copy_tree(agents_src, target / ".agents", force, created, skipped)
+        copy_tree(agents_src, target / ".agents", force, created, skipped)
 
     prefs_path = target / "_cybersquad" / "_memory" / "preferences.md"
     prefs_path.parent.mkdir(parents=True, exist_ok=True)

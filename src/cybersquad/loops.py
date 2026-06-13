@@ -6,6 +6,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from ._utils import copy_tree
 from .workspace import template_root
 
 AGENT_COMMANDS: dict[str, str] = {
@@ -22,22 +23,6 @@ LOOP_REQUIRED_FILES = [
     ".agents/ralph/config.sh",
     ".agents/tasks/prd.json",
 ]
-
-
-def _copy_tree(src, dst: Path, force: bool, created: list[str], skipped: list[str]) -> None:
-    if src.is_dir():
-        dst.mkdir(parents=True, exist_ok=True)
-        for child in src.iterdir():
-            _copy_tree(child, dst / child.name, force, created, skipped)
-        return
-
-    if dst.exists() and not force:
-        skipped.append(str(dst))
-        return
-
-    dst.parent.mkdir(parents=True, exist_ok=True)
-    dst.write_bytes(src.read_bytes())
-    created.append(str(dst))
 
 
 def _resolve_path(workspace: Path, value: str | None, default_relative: str) -> Path:
@@ -66,7 +51,7 @@ def install_loop_templates(workspace: Path, force: bool) -> int:
 
     created: list[str] = []
     skipped: list[str] = []
-    _copy_tree(agents_src, workspace / ".agents", force, created, skipped)
+    copy_tree(agents_src, workspace / ".agents", force, created, skipped)
 
     (workspace / ".ralph").mkdir(parents=True, exist_ok=True)
 

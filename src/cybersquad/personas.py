@@ -9,8 +9,15 @@ class Persona:
     id: str
     name: str
     role: str
+    seniority: str = ""
+    mission: str = ""
     communication_style: str = ""
+    core_expertise: list[str] = field(default_factory=list)
+    technical_skills: list[str] = field(default_factory=list)
+    responsibilities: list[str] = field(default_factory=list)
     consult_when: list[str] = field(default_factory=list)
+    outputs: list[str] = field(default_factory=list)
+    escalation_triggers: list[str] = field(default_factory=list)
 
 
 def _clean_scalar(value: str) -> str:
@@ -20,6 +27,16 @@ def _clean_scalar(value: str) -> str:
     ):
         return text[1:-1].strip()
     return text
+
+
+_LIST_FIELDS: set[str] = {
+    "core_expertise",
+    "technical_skills",
+    "responsibilities",
+    "consult_when",
+    "outputs",
+    "escalation_triggers",
+}
 
 
 def parse_personas_yaml(content: str) -> list[Persona]:
@@ -63,21 +80,34 @@ def parse_personas_yaml(content: str) -> list[Persona]:
             list_mode = None
             continue
 
+        if line.startswith("    seniority:"):
+            current.seniority = _clean_scalar(line.split(":", 1)[1])
+            list_mode = None
+            continue
+
+        if line.startswith("    mission:"):
+            current.mission = _clean_scalar(line.split(":", 1)[1])
+            list_mode = None
+            continue
+
         if line.startswith("    communication_style:"):
             current.communication_style = _clean_scalar(line.split(":", 1)[1])
             list_mode = None
             continue
 
-        if line.startswith("    consult_when:"):
-            list_mode = "consult_when"
-            continue
+        for field_name in _LIST_FIELDS:
+            if line.startswith(f"    {field_name}:"):
+                list_mode = field_name
+                break
+        else:
+            if list_mode and line.startswith("      - "):
+                getattr(current, list_mode).append(_clean_scalar(line[8:]))
+                continue
 
-        if list_mode == "consult_when" and line.startswith("      - "):
-            current.consult_when.append(_clean_scalar(line[8:]))
-            continue
+            if line.startswith("    ") and not line.startswith("      - "):
+                list_mode = None
 
-        if line.startswith("    ") and not line.startswith("      - "):
-            list_mode = None
+        continue
 
     if current and current.id and current.name and current.role:
         personas.append(current)

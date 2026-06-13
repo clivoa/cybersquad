@@ -58,11 +58,13 @@ COLLAB_HINTS: dict[str, tuple[str, str]] = {
     ),
 }
 
+
 def _slugify(value: str) -> str:
     slug = "".join(ch.lower() if ch.isalnum() else "-" for ch in value).strip("-")
     while "--" in slug:
         slug = slug.replace("--", "-")
     return slug
+
 
 def _when_to_use(persona: Persona) -> list[str]:
     if persona.consult_when:
@@ -108,22 +110,44 @@ def _study_focus(persona: Persona) -> str:
     return "how to explain this topic for practical learning."
 
 
+def _bullet_list(items: list[str]) -> str:
+    return "\n".join(f"- {item}" for item in items)
+
+
 def _render_persona_block(index: int, persona: Persona) -> str:
     collab, collab_goal = _collaboration(persona)
     study_focus = _study_focus(persona)
-    when_lines = "\n".join(f"- {item}" for item in _when_to_use(persona))
-    style_line = (
-        f"- Expected communication style: {persona.communication_style}"
+    when_lines = _bullet_list(_when_to_use(persona))
+
+    mission_line = f"\n> {persona.mission}" if persona.mission else ""
+    seniority_line = f" [{persona.seniority}]" if persona.seniority else ""
+
+    style_section = (
+        f"\n- Communication style: {persona.communication_style}"
         if persona.communication_style
         else ""
     )
+    skills_section = (
+        f"\n- Key tools: {', '.join(persona.technical_skills)}"
+        if persona.technical_skills
+        else ""
+    )
 
-    style_section = f"\n{style_line}" if style_line else ""
+    outputs_section = (
+        f"\n\nExpected outputs:\n{_bullet_list(persona.outputs)}"
+        if persona.outputs
+        else ""
+    )
+    escalation_section = (
+        f"\n\nEscalate when:\n{_bullet_list(persona.escalation_triggers)}"
+        if persona.escalation_triggers
+        else ""
+    )
 
-    return f"""## {index}) {persona.name} ({persona.role})
+    return f"""## {index}) {persona.name}{seniority_line} ({persona.role}){mission_line}
 
 When to use:
-{when_lines}{style_section}
+{when_lines}{style_section}{skills_section}{outputs_section}{escalation_section}
 
 Quick prompt:
 ```text
@@ -166,7 +190,7 @@ Output format:
 
 
 def render_persona_prompts(personas: list[Persona]) -> str:
-    generated_at = dt.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+    generated_at = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
 
     header = f"""# Cyber Squad: Persona Prompts (Auto-generated)
 
@@ -205,15 +229,39 @@ Decision needed: [approve, escalate, contain, prioritize]
 def render_single_persona_prompt(persona: Persona) -> str:
     collab, collab_goal = _collaboration(persona)
     study_focus = _study_focus(persona)
-    when_lines = "\n".join(f"- {item}" for item in _when_to_use(persona))
+    when_lines = _bullet_list(_when_to_use(persona))
 
-    return f"""# {persona.name} - Usage Prompt
+    mission_line = f"\n> {persona.mission}\n" if persona.mission else ""
+    seniority_line = f" [{persona.seniority}]" if persona.seniority else ""
+
+    expertise_section = (
+        f"\nCore expertise:\n{_bullet_list(persona.core_expertise)}\n"
+        if persona.core_expertise
+        else ""
+    )
+    skills_section = (
+        f"\nKey tools: {', '.join(persona.technical_skills)}\n"
+        if persona.technical_skills
+        else ""
+    )
+    outputs_section = (
+        f"\nExpected outputs:\n{_bullet_list(persona.outputs)}\n"
+        if persona.outputs
+        else ""
+    )
+    escalation_section = (
+        f"\nEscalate when:\n{_bullet_list(persona.escalation_triggers)}\n"
+        if persona.escalation_triggers
+        else ""
+    )
+
+    return f"""# {persona.name}{seniority_line} - Usage Prompt
 
 Role: {persona.role}
-
+{mission_line}
 When to use:
 {when_lines}
-
+{expertise_section}{skills_section}{outputs_section}{escalation_section}
 Base prompt:
 ```text
 Role(s): {persona.name}
